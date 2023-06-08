@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 
@@ -49,7 +50,7 @@ func main() {
 			marks++
 		}
 	}
-	fmt.Println("total marks : ",marks)
+	fmt.Printf("You scored %d out of %d",marks,len(problems))
 }
 
 
@@ -62,7 +63,7 @@ func parseLines(lines [][]string) []problems {
 	for i,line := range lines {
 		ret[i] = problems{
 			q: line[0],
-			a: line[1],
+			a: strings.TrimSpace(line[1]), // in order to trim spaces if it exists
 		}
 	}
 
@@ -83,3 +84,11 @@ func exit(msg string) {
 	os.Exit(1)
 
 }
+
+
+// the packages that I have used
+
+// encoding/csv - for creating new reader of csv file type
+// flag - used to pass a particular type of data from command line
+// os - for reading a file or to create a reader
+// strings - in order to trim space when extracting values
