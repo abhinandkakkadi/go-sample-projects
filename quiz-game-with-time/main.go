@@ -64,8 +64,8 @@ func main() {
 	// 	}
 
 	// }
-
-	
+var flag = 0
+problemLoop:
 	for i, p := range problems {
 
 		answerCh := make(chan string)
@@ -79,8 +79,10 @@ func main() {
 		select {
 
 		case <-timer.C:
-			fmt.Printf("You scored %d out of %d", marks, len(problems))
-			return
+			// this will only be executed if timer is up. If you managed to complete the quiz in time. This case will never becomes true when the for loop is running
+			fmt.Printf("\ntime up you scored %d out of %d", marks, len(problems))
+			flag =1
+			break problemLoop;
 		case ans := <-answerCh:
 			if p.a == ans {
 				marks++
@@ -88,6 +90,10 @@ func main() {
 		}
 
 	}
+	if flag == 0 {
+		fmt.Printf("You completed in time and you scored %d out of %d", marks, len(problems))
+	}
+	
 
 }
 
