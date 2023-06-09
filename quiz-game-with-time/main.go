@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 	// So we have to send data in (-csv string) format since we have defined those things below
 	csvFilename := flag.String("csv", "problems.csv", "a csv file in the format of question, answer")
 	// The below statement is used to parse the command line given input and replace the default one.
-	flag.Parse()
+
 	// the assignment is done to compile our programme temporarily
 	_ = csvFilename
 
@@ -38,18 +39,56 @@ func main() {
 	problems := parseLines(lines)
 	fmt.Println(problems)
 
+	timeLimit := flag.Int("time", 30, "Enter the time limit for the game in seconds")
+	flag.Parse()
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+
 	marks := 0
+
+
 	// here we are ranging through the slice of problem struct and we are printing the question and waiting for the users answer
 	// the scanf have a newline character in order for the computer to understand the newline that automatically gets get applied when we press enter
+	// for i, p := range problems {
+	// 	select {
+	// 	case <-timer.C: // in this case even if time is up, it will not stop since it is waiting for an answer and iterate over loop and check if the data is ready which was sent over teh channel
+	// 		fmt.Printf("You scored %d out of %d", marks, len(problems))
+	// 		return  // if we used break here - it will only be exiting from the select statement and not from for loop as we intended
+
+	// 	default:
+	// 		fmt.Printf("problem %d : %s = ", i+1, p.q)
+	// 		var ans string
+	// 		fmt.Scanf("%s\n", &ans)
+	// 		if p.a == ans {
+	// 			marks++
+	// 		}
+	// 	}
+
+	// }
+
+	
 	for i, p := range problems {
-		fmt.Printf("problem %d : %s = ", i+1, p.q)
-		var ans string
-		fmt.Scanf("%s\n", &ans)
-		if p.a == ans {
-			marks++
+
+		answerCh := make(chan string)
+		go func() {
+			fmt.Printf("problem %d : %s = ", i+1, p.q)
+			var ans string
+			fmt.Scanf("%s\n", &ans)
+			answerCh <- ans
+		}()
+
+		select {
+
+		case <-timer.C:
+			fmt.Printf("You scored %d out of %d", marks, len(problems))
+			return
+		case ans := <-answerCh:
+			if p.a == ans {
+				marks++
+			}
 		}
+
 	}
-	fmt.Printf("You scored %d out of %d", marks, len(problems))
+
 }
 
 // here each row is received in ranging and from that the question and answer will be added to two fields of a single struct (problems)
