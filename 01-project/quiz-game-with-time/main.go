@@ -45,7 +45,6 @@ func main() {
 
 	marks := 0
 
-
 	// here we are ranging through the slice of problem struct and we are printing the question and waiting for the users answer
 	// the scanf have a newline character in order for the computer to understand the newline that automatically gets get applied when we press enter
 	// for i, p := range problems {
@@ -64,7 +63,7 @@ func main() {
 	// 	}
 
 	// }
-var flag = 0
+	var flag = 0
 problemLoop:
 	for i, p := range problems {
 
@@ -81,8 +80,8 @@ problemLoop:
 		case <-timer.C:
 			// this will only be executed if timer is up. If you managed to complete the quiz in time. This case will never becomes true when the for loop is running
 			fmt.Printf("\ntime up you scored %d out of %d", marks, len(problems))
-			flag =1
-			break problemLoop;
+			flag = 1
+			break problemLoop
 		case ans := <-answerCh:
 			if p.a == ans {
 				marks++
@@ -93,7 +92,6 @@ problemLoop:
 	if flag == 0 {
 		fmt.Printf("You completed in time and you scored %d out of %d", marks, len(problems))
 	}
-	
 
 }
 
