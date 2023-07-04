@@ -27,31 +27,30 @@ func main() {
 	quiz := addToDataStructure(questionAndAnswers)
 	// fmt.Println(quiz)
 
-	t := time.NewTimer(time.Second*30)
+	t := time.NewTimer(time.Second * 30)
 
-	
 	totalMarks := 0
-	for i,q := range quiz {
-		fmt.Printf("question no:%d question:%s options:%v\n",i+1,q.problem,q.choice)
+	for i, q := range quiz {
+		fmt.Printf("question no:%d question:%s options:%v\n", i+1, q.problem, q.choice)
 		ansC := make(chan string)
 		go func() {
 			var ans string
-			fmt.Scanf("%s",&ans)
+			fmt.Scanf("%s", &ans)
 			ansC <- ans
 		}()
 
 		select {
 		case <-t.C:
-			fmt.Printf("total marks scored by the player : %d",totalMarks)
+			fmt.Printf("total marks scored by the player : %d", totalMarks)
 			return
-		case answer :=  <- ansC:
+		case answer := <-ansC:
 			if answer == q.answer {
 				totalMarks++
 			}
 		}
 	}
 
-	fmt.Printf("total marks scored = %d\n",totalMarks)
+	fmt.Printf("total marks scored = %d\n", totalMarks)
 
 }
 
