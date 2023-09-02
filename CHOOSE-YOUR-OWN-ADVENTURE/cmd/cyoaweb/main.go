@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-
+	// flag variables to set cfg details at runtime
 	port := flag.Int("port", 3000, "the port to start the CYOA web application on")
 	file := flag.String("file", "gopher.json", "the JSON file with CYOA story")
 	flag.Parse()
